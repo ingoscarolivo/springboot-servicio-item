@@ -7,9 +7,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.ribbon.proxy.annotation.Hystrix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.formacionbdi.springboot.app.item.models.Item;
 import com.formacionbdi.springboot.app.item.models.service.ItemService;
@@ -22,7 +20,9 @@ public class ItemController {
 	private ItemService itemService;
 	
 	@GetMapping("/listar")
-	public List<Item> listar(){
+	public List<Item> listar(@RequestParam(name = "nombre", required = false) String nombre, @RequestHeader(name = "token-request", required = false) String token){
+		System.out.println("nombre = " + nombre);
+		System.out.println("token = " + token);
 		return itemService.findAll();
 	}
 
