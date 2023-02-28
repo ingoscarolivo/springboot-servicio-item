@@ -3,6 +3,7 @@ package com.formacionbdi.springboot.app.item.controllers;
 import java.util.List;
 
 import com.formacionbdi.springboot.app.item.models.Producto;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,18 @@ public class ItemController {
 		return itemService.findAll();
 	}
 
-	//@HystrixCommand(fallbackMethod = "metodoAlternativo")
+	//Utiliza la del AppConfig
 	@GetMapping("/ver/{id}/cantidad/{cantidad}")
 	public Item detalle(@PathVariable Long id, @PathVariable Integer cantidad) {
 		return cbFactory.create("items")
 				.run(() -> itemService.findById(id, cantidad),e -> metodoAlternativo(id, cantidad, e));
+	}
+
+	//La anotacion circuit breaker utiliza la configuracion del properties
+	@CircuitBreaker(name = "items", fallbackMethod = "metodoAlternativo")
+	@GetMapping("/ver2/{id}/cantidad/{cantidad}")
+	public Item detalle2(@PathVariable Long id, @PathVariable Integer cantidad) {
+		return itemService.findById(id, cantidad);
 	}
 
 
