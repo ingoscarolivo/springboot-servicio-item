@@ -82,4 +82,23 @@ public class ItemController {
 		return new ResponseEntity<Map<String,String>>(json, HttpStatus.OK);
 	}
 
+
+	@PostMapping("/crear")
+	@ResponseStatus(HttpStatus.CREATED)
+	public Producto crear(@RequestBody Producto producto){
+		return itemService.save(producto);
+	}
+
+	@PutMapping("/editar/{id}")
+	@ResponseStatus(HttpStatus.CREATED)
+	public Producto editar(@RequestBody Producto producto, @PathVariable Long id){
+		return itemService.update(producto, id);
+	}
+
+	@DeleteMapping("/eliminar/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public  void eliminar(@PathVariable Long id){
+		itemService.delete(id);
+	}
+
 }
